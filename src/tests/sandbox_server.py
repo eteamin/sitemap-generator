@@ -1,16 +1,32 @@
 
+from http.server import BaseHTTPRequestHandler
 
-class SandboxServer:
+from src.tests.variables import host, port
 
-    def index(self):
-        return "Hello World!"
 
-    def some_page(self):
-        pass
+class RequestHandler(BaseHTTPRequestHandler):
 
-    def some_other_page(self):
-        pass
+    def do_GET(self):
+        if self.path == '/':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.end_headers()
+            body = '''<blah></blah>
+                <a href="http://{}:{}">github</a>
+                <blah></blah>
+                <a href="/inner>I am relative</a>
+                <blah></blah>'''.format(host, port)
+            self.wfile.write(bytes(body, "utf8"))
 
-    index.exposed = True
-    some_page.exposed = True
-    some_other_page.exposed = True
+        elif self.path == '/inner':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.end_headers()
+            body = '''<blah></blah>
+                <a href="http://{}:{}">github</a>
+                <a href="http://foreign.url>Foreign url</a>
+                <blah></blah>'''.format(host, port)
+            self.wfile.write(bytes(body, "utf8"))
+
+        else:
+            self.send_response(404)

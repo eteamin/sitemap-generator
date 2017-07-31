@@ -1,13 +1,39 @@
 import unittest
+import os
+from threading import Thread
+from http.server import HTTPServer
+import shutil
+
+from src.sitemap_generator.crawler import SitemapGenerator
+from src.tests.variables import host, port
+from src.tests.sandbox_server import RequestHandler
 
 
 class TestCase(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.background_server = Thread(target=self.server, daemon=True)
+        self.background_server.start()
+        self.url = 'http://{}:{}'.format(host, port)
+        self.output_dir = os.path.join(os.getcwd(), 'tmp')
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
 
     def test_crawler(self):
-        pass
+        generator = SitemapGenerator(self.url, path=self.output_dir, timeout=None)
+        generator.generate()
+
+        with open(os.path.join(self.output_dir, '{}:{}.xml').format(host, port)) as sitemap:
+            assert sitemap.read() is not None
 
     def tearDown(self):
-        pass
+        shutil.rmtree(self.output_dir)
+        self.sandbox_server.server_close()
+
+    def server(self):
+        self.sandbox_server = HTTPServer((host, port), RequestHandler)
+        self.sandbox_server.serve_forever()
+
+
+if __name__ == '__main__':
+    unittest.main()
