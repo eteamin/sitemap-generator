@@ -19,8 +19,7 @@ packages = [
 ]
 
 requires = [
-    'requests',
-    'cherrypy'
+    'requests'
 ]
 
 test_requirements = []

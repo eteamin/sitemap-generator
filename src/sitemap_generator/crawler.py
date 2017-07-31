@@ -1,6 +1,7 @@
 from queue import Queue, Empty
 from threading import Thread
 import re
+import os
 from urllib.parse import urlparse
 
 from requests import get as fetch
@@ -8,10 +9,12 @@ from requests import get as fetch
 from src.sitemap_generator.variables import url_pattern
 from src.sitemap_generator.url import URL
 
+TIMEOUT = 3
+
 
 class SitemapGenerator(object):
 
-    def __init__(self, url, queue_max_size=500, timeout=3, workers=4):
+    def __init__(self, url, path, timeout, queue_max_size=500, workers=4):
         self.base_url = url
         url_parts = urlparse(url)
         self.domain = url_parts.netloc
@@ -22,7 +25,7 @@ class SitemapGenerator(object):
         self.unique_urls = []
         self.urls.put(self.base_url)
         self.worker_threads = {}
-        self.sitemap = ''
+        self.path = path
 
     def generate(self):
         for i in range(self.workers):
@@ -38,7 +41,7 @@ class SitemapGenerator(object):
     def _url_gatherer_worker(self):
         while True:
             try:
-                url = self.urls.get(timeout=self.timeout)
+                url = self.urls.get(timeout=self.timeout or TIMEOUT)
             except Empty:
                 break
             self._gather(url)
@@ -54,16 +57,26 @@ class SitemapGenerator(object):
                 self.urls.put(url)
 
     def _fetch(self, url):
-        return fetch(url, timeout=self.timeout).text
+        return fetch(url, timeout=self.timeout or TIMEOUT).text
 
     def _build_xml(self):
-        self.sitemap += '<urlset>\n'
+        data = '<urlset>\n'
 
         for url in self.unique_urls:
-            self.sitemap += '    <url>\n'
-            self.sitemap += '        <loc>{}</loc>\n'.format(url)
-            self.sitemap += '    </url>\n'
-        self.sitemap += '</urlset>'
+            data += '    <url>\n'
+            data += '        <loc>{}</loc>\n'.format(url)
+            data += '    </url>\n'
+        data += '</urlset>'
 
-        with open('sitemap.xml', 'w') as sitemap:
-            sitemap.write(self.sitemap)
+        self._write_xml(data)
+
+    def _write_xml(self, data):
+        if not self.path:
+            current_dir = os.getcwd()
+            sitemaps_dir = os.path.join(current_dir, 'sitemaps')
+            if not os.path.exists(sitemaps_dir):
+                os.makedirs(sitemaps_dir)
+            self.path = sitemaps_dir
+
+        with open('{}/{}.xml'.format(self.path, self.domain), 'w+') as sitemap:
+            sitemap.write(data)
