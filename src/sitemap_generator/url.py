@@ -17,7 +17,12 @@ class URL(object):
             return '/%s' % self.url
         return self.url
 
-    def get_full_url(self, domain, scheme='http'):
-        if self.is_relative:
+    def get_full_url(self, base_url, domain, scheme='http'):
+        if '#' in self.url:
+            return base_url
+        elif self.is_relative:
             return '%s://%s%s' % (scheme, domain, self.ensure_primitive_slash())
-        return self.url
+        elif domain in self.url:
+            return self.url
+        else:
+            return base_url
