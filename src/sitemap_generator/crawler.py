@@ -71,12 +71,5 @@ class SitemapGenerator(object):
         self._write_xml(data)
 
     def _write_xml(self, data):
-        if not self.path:
-            current_dir = os.getcwd()
-            sitemaps_dir = os.path.join(current_dir, 'sitemaps')
-            if not os.path.exists(sitemaps_dir):
-                os.makedirs(sitemaps_dir)
-            self.path = sitemaps_dir
-
         with open('{}/{}.xml'.format(self.path, self.domain), 'w+') as sitemap:
             sitemap.write(data)

@@ -1,5 +1,6 @@
 import argparse
-from os.path import exists
+from os.path import exists, join
+from os import getcwd, mkdir
 
 
 if __name__ == '__main__':
@@ -10,14 +11,14 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     url = args.url
-    path = args.path
-    timeout = int(args.timeout)
+    path = args.path or join(getcwd(), 'output')
+    timeout = int(args.timeout or 3)
 
     if not url.startswith('http'):
         raise Exception('Url must start with http')
 
     if not exists(path):
-        raise Exception('Provided path doesn\'t exist')
+        mkdir(path)
 
     try:
         import requests
