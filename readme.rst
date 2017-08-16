@@ -8,7 +8,9 @@ Simple multi-thread sitemap generator in python
 
 Depends on
 ----------
-requests
+.. code-block:: bash
+
+  pip install requests
 
 
 Usage
