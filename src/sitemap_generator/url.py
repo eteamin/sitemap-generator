@@ -18,6 +18,8 @@ class URL(object):
         return self.url
 
     def get_full_url(self, base_url, domain, scheme='http'):
+        if self.url.endswith('/'):
+            self.url = self.url[:-1]
         if '#' in self.url:
             return base_url
         elif self.is_relative:

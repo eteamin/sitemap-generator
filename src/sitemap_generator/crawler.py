@@ -1,7 +1,6 @@
 from queue import Queue, Empty
 from threading import Thread
 import re
-import os
 from urllib.parse import urlparse
 
 from requests import get as fetch
@@ -24,6 +23,7 @@ class SitemapGenerator(object):
         self.urls = Queue(maxsize=queue_max_size)
         self.unique_urls = []
         self.urls.put(self.base_url)
+        self.unique_urls.append(self.base_url)
         self.worker_threads = {}
         self.path = path
 
