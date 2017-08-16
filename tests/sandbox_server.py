@@ -1,7 +1,7 @@
 
 from http.server import BaseHTTPRequestHandler
 
-from src.tests.variables import host, port
+from tests.variables import host, port
 
 
 class RequestHandler(BaseHTTPRequestHandler):

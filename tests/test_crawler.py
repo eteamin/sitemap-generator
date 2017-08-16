@@ -1,12 +1,13 @@
-import unittest
 import os
-from threading import Thread
-from http.server import HTTPServer
 import shutil
+import unittest
+from http.server import HTTPServer
+from threading import Thread
 
-from src.sitemap_generator.crawler import SitemapGenerator
-from src.tests.variables import host, port
-from src.tests.sandbox_server import RequestHandler
+from tests.sandbox_server import RequestHandler
+
+from sitemap_generator.crawler import SitemapGenerator
+from tests.variables import host, port
 
 
 class TestCase(unittest.TestCase):

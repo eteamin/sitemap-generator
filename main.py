@@ -1,6 +1,6 @@
 import argparse
-from os.path import exists, join
 from os import getcwd, mkdir
+from os.path import exists, join
 
 
 if __name__ == '__main__':
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     except ImportError:
         raise Exception('requests module is not installed. `pip install requests`')
 
-    from src.sitemap_generator.crawler import SitemapGenerator
+    from sitemap_generator.crawler import SitemapGenerator
 
     generator = SitemapGenerator(url=url, timeout=timeout, path=path)
     generator.generate()

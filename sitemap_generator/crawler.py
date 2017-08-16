@@ -1,12 +1,12 @@
+import re
 from queue import Queue, Empty
 from threading import Thread
-import re
 from urllib.parse import urlparse
 
 from requests import get as fetch
 
-from src.sitemap_generator.variables import url_pattern
-from src.sitemap_generator.url import URL
+from sitemap_generator.url import URL
+from sitemap_generator.variables import url_pattern
 
 TIMEOUT = 3
 
