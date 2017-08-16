@@ -15,6 +15,7 @@ class URL(object):
     def ensure_primitive_slash(self):
         if not self.has_primitive_slash:
             return '/%s' % self.url
+
         return self.url
 
     def get_full_url(self, base_url, domain, scheme='http'):
