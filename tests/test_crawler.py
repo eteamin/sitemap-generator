@@ -25,6 +25,7 @@ class TestCase(unittest.TestCase):
         generator.generate()
 
         with open(os.path.join(self.output_dir, '{}:{}.xml').format(host, port)) as sitemap:
+            # FIXME: assertion
             assert sitemap.read() is not None
 
     def tearDown(self):
