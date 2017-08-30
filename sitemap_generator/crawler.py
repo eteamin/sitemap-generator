@@ -52,7 +52,6 @@ class SitemapGenerator(object):
         for i in re.finditer(url_pattern, data, re.DOTALL):
             url = URL(i.groupdict().get('url')).get_full_url(self.base_url, self.domain, self.scheme)
             if url not in self.unique_urls:
-                print(url)
                 self.unique_urls.append(url)
                 self.urls.put(url)
 

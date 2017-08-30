@@ -7,7 +7,7 @@ from threading import Thread
 from tests.sandbox_server import RequestHandler
 
 from sitemap_generator.crawler import SitemapGenerator
-from tests.variables import host, port
+from tests.variables import host, port, expected_sitemap
 
 
 class TestCase(unittest.TestCase):
@@ -25,8 +25,7 @@ class TestCase(unittest.TestCase):
         generator.generate()
 
         with open(os.path.join(self.output_dir, '{}:{}.xml').format(host, port)) as sitemap:
-            # FIXME: assertion
-            assert sitemap.read() is not None
+            assert sitemap.read() == expected_sitemap
 
     def tearDown(self):
         shutil.rmtree(self.output_dir)
